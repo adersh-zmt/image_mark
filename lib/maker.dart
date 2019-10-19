@@ -20,7 +20,7 @@ class MarkerProvider with ChangeNotifier{
     notifyListeners();
   }
   MarkerProvider(){
-    http.post(url)
+    
   }
 
 }

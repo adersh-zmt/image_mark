@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:image_marker/maker.dart';
+import 'package:image_marker/provider/mark.dart';
+import 'package:image_marker/provider/marker_provider.dart';
+import 'package:image_marker/zoomable.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
@@ -55,46 +57,73 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return MultiProvider(
-       providers: [
-            ChangeNotifierProvider(builder: (_) => MarkerProvider()),
-          ],
-          child: Scaffold(
+      providers: [
+        ChangeNotifierProvider(builder: (_) => MarkerProvider()),
+      ],
+      child: Scaffold(
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
           title: Text(widget.title),
         ),
-        body:  Builder(
-          builder: (context) {
-            return GestureDetector(
-                onTapUp: (tapUpDetails) {
-                  Provider.of<MarkerProvider>(context, listen: false)
-                      .add(Mark(x: tapUpDetails.localPosition.dx, y: tapUpDetails.localPosition.dy,));
-                },
-                child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage('assets/images/train.jpg'))),
-                  child: Consumer<MarkerProvider>(builder: (context, marker, _) {
-                    return Stack(
-                      fit: StackFit.passthrough,
-                      children: marker.marks.map((mark) {
-                        return Positioned(
-                          left: mark.x,
-                          top: mark.y,
+        body: Builder(builder: (context) {
+          return ZoomableWidget(
+            child: GestureDetector(
+              onTapUp: (tapUpDetails) {
+                Provider.of<MarkerProvider>(context, listen: false).add(Mark(
+                  x: tapUpDetails.localPosition.dx,
+                  y: tapUpDetails.localPosition.dy,
+                ));
+              },
+              child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image: AssetImage('assets/images/train.jpg'))),
+                child: Consumer<MarkerProvider>(builder: (context, marker, _) {
+                  return Stack(
+                    fit: StackFit.passthrough,
+                    children: marker.marks.map((mark) {
+                      return Positioned(
+                        left: mark.x,
+                        top: mark.y,
+                        child: GestureDetector(
                           child: FlutterLogo(),
-                        );
-                      }).toList(),
-                    );
-                  }),
-                ),
-              );
-          }
-        ),
-        ),
+                          onTap: () => {_showDialog()},
+                        ),
+                      );
+                    }).toList(),
+                  );
+                }),
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Alert Dialog title"),
+          content: new Text("Alert Dialog body"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

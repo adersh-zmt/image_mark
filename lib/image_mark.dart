@@ -27,10 +27,10 @@ class ImageMark extends StatelessWidget {
                     fit: StackFit.passthrough,
                     children: marker.marks.map((mark) {
                       return Positioned(
-                        left: mark.x,
-                        top: mark.y,
+                        left: mark.x - 15,
+                        top: mark.y - 30,
                         child: GestureDetector(
-                          child: FlutterLogo(),
+                          child: Icon(Icons.room, size: 30,color: const Color.fromARGB(255, 255, 0, 0)),
                           onTap: () => {_showDialog(context)},
                         ),
                       );
@@ -48,8 +48,8 @@ class ImageMark extends StatelessWidget {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Alert Dialog title"),
-          content: new Text("Alert Dialog body"),
+          title: new Text("<TestSutra Inspection Item>"),
+          content: Center(child: new Text("<Form>")),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(

@@ -9,3 +9,4 @@ class Mark{
   factory Mark.fromJson(Map<String, dynamic> json) => _$MarkFromJson(json);
   Map<String, dynamic> toJson() => _$MarkToJson(this);
 }
+

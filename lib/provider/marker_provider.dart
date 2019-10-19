@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'mark.dart';
 
@@ -16,12 +16,12 @@ class MarkerProvider with ChangeNotifier {
     getMarkers();
   }
   getMarkers() async {
-    var response = await http.get(
-        "https://raw.githubusercontent.com/adersh-zmt/image_mark/master/data/marks.json");
-    if (response.statusCode == 200) {
-      var markArray = jsonDecode(response.body) as List;
-      _marks = markArray.map((json) => Mark.fromJson(json)).toList();
-      notifyListeners();
-    }
+    var sample = await rootBundle.loadString('data/marks.json');
+    var markArray = jsonDecode(sample) as List;
+   markArray.forEach((json) {
+     add(Mark.fromJson(json));
+   });
+    notifyListeners();
   }
 }
+
